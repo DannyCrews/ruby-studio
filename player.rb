@@ -28,6 +28,11 @@ class Player
 		@health -= 10
 		puts "#{@name} got blammed!"
 	end
+
+	def strong?
+		@health > 100
+	end
+
 end
 
 if __FILE__ == $0
