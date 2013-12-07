@@ -1,5 +1,4 @@
-    
-require_relative 'game'
+ require_relative 'game'
 
 describe Game do
 
@@ -11,29 +10,29 @@ describe Game do
     
     @game.add_player(@player)
   end
-
-  it "w00ts the player if a high number is rolled" do
-  Die.any_instance.stub(:roll).and_return(5)
-      
-  @game.play
   
-  @player.health.should == @initial_health + 15
-	end
+  it "w00ts the player if a high number is rolled" do
+    Die.any_instance.stub(:roll).and_return(5)
 
-	it "skips the player if a medium number is rolled" do
-  Die.any_instance.stub(:roll).and_return(3)
+    @game.play(2)
 
-  @game.play
+    @player.health.should == @initial_health + (15 * 2)
+  end
 
-  @player.health.should == @initial_health
-	end
+  it "skips the player if a medium number is rolled" do
+    Die.any_instance.stub(:roll).and_return(3)
 
-	it "blams the player if a low number is rolled" do
-  Die.any_instance.stub(:roll).and_return(1)
+    @game.play(2)
 
-  @game.play
+    @player.health.should == @initial_health
+  end
 
-  @player.health.should == @initial_health - 10
-	end
+  it "blams the player if a low number is rolled" do
+    Die.any_instance.stub(:roll).and_return(1)
+
+    @game.play(2)
+
+    @player.health.should == @initial_health - (10 * 2)
+  end
   
 end

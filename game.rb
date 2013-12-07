@@ -1,5 +1,6 @@
 require_relative 'player'
 require_relative 'die'
+require_relative 'game_turn'
 
 class Game
 	attr_reader :title
@@ -13,23 +14,45 @@ class Game
 		@players.push(a_player)
 	end
 
-	def play
-  puts "There are #{@players.size} players in #{@title}: "
-  @players.each do |player|
-    puts player
-  end
-  
-  @players.each do |player|
-    die = Die.new
-    case die.roll
-    when 1..2
-      player.blam
-    when 3..4
-      puts "#{player.name} was skipped."
-    else
-      player.w00t
+  def play(rounds)
+    puts "There are #{@players.size} players in #{@title}: "
+
+    @players.each do |player|
+      puts player
     end
-    puts player
+
+    def print_stats
+      strong_players = @players.select {|player| player.strong?}
+      wimpy_players = @players.reject {|player| player.strong?}
+
+      puts "\n#{@title} Statistics:"
+
+      puts "\n{strong_players.size} strong players:"
+      strong_players.each do |player|
+        puts "#{player.name} (#{player.health})"
+      end
+
+      puts "\n#{wimpy_players.size} wimpy players:"
+      wimpy_players.each do |player|
+        puts "#{player.name} (#{player.health})"
+      end
+      
+      sorted_players = @players.sort { |a, b| b.score <=> a.score }
+
+      puts "\n#{@title} High Scores:"
+      @players.sort.each do |player|
+      formatted_name = player.name.ljust(20, '.')
+        puts "#{formatted_name} #{player.score}"
+      end
+
+    end
+
+    1.upto(rounds) do |round|
+      puts "\nRound #{round}:"
+      @players.each do |player|
+        GameTurn.take_turn(player)
+        puts player
+      end
+    end
   end
-end
 end
